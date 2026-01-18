@@ -32,10 +32,6 @@
 
     <div class="sectionTitle">Test Pages</div>
     <div id="tests" class="grid"></div>
-
-    <p class="hint">
-      If something is missing, make sure the file is inside this same folder and ends with <b>.htm</b> or <b>.html</b>.
-    </p>
   </div>
 
   <script>
@@ -44,7 +40,6 @@
     const repo  = "BOOSE-DOCUMENTATION";
     const folderPath = "Part 2 -XML Documentation"; // exactly same as your folder name
 
-    // Build GitHub API URL to list files in that folder (public repo)
     const apiUrl = `https://api.github.com/repos/${owner}/${repo}/contents/${encodeURIComponent(folderPath)}`;
 
     const statusEl = document.getElementById("status");
@@ -53,7 +48,7 @@
 
     function addLink(parent, fileName){
       const a = document.createElement("a");
-      a.href = fileName;              // relative link (same folder)
+      a.href = fileName;
       a.textContent = fileName.replace(/\.(htm|html)$/i,"");
       parent.appendChild(a);
     }
@@ -64,7 +59,6 @@
         return r.json();
       })
       .then(items => {
-        // filter for html/htm files excluding index itself
         const pages = items
           .filter(x => x.type === "file")
           .map(x => x.name)
@@ -75,10 +69,8 @@
           return;
         }
 
-        // sort A-Z
         pages.sort((a,b) => a.localeCompare(b, undefined, {sensitivity:"base"}));
 
-        // split tests vs docs
         const testPages = pages.filter(n => /^test_/i.test(n));
         const docPages  = pages.filter(n => !/^test_/i.test(n));
 
@@ -89,9 +81,8 @@
       })
       .catch(err => {
         statusEl.innerHTML =
-          '<span class="err">Could not load the folder list.</span> ' +
-          'If the repo is private OR the folder name is different, it will fail. ' +
-          '<br><span class="small">Error: ' + (err.message || err) + '</span>';
+          '<span class="err">Could not load the folder list.</span><br>' +
+          '<span class="small">Error: ' + (err.message || err) + '</span>';
       });
   </script>
 </body>
